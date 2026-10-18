@@ -1,0 +1,6 @@
+[General]
+Name=Nasim OS
+LogoPath=/usr/share/pixmaps/nasim-logo.svg
+Website=https://github.com/Bader1549/nasim-os
+Variant=Desktop
+Variant[ar]=سطح المكتب

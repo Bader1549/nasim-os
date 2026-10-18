@@ -1,0 +1,10 @@
+[Desktop Entry]
+Type=Application
+Name=Xbox Cloud Gaming
+Name[ar]=ألعاب Xbox السحابية
+Comment=Play Xbox games in the cloud
+Comment[ar]=العب ألعاب Xbox عن طريق السحابة
+Exec=/usr/bin/flatpak run com.google.Chrome --app=https://www.xbox.com/play
+Icon=applications-games
+Categories=Game;
+StartupNotify=true

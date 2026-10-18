@@ -1,0 +1,84 @@
+---
+# yaml-language-server: $schema=https://schema.blue-build.org/module-list-v1.json
+# Everything Nasim OS adds on top of Bazzite. Shared by every recipe.
+modules:
+  # Config files: KDE defaults, .exe handling, keyboard, branding, services.
+  - type: files
+    files:
+      - source: system
+        destination: /
+
+  # Remove Bazzite's own defaults that clash with Nasim (autostarts, taskbar pins).
+  - type: script
+    scripts:
+      - nasim-cleanup.sh
+
+  # Windows-11-style Fluent icons. Terra is present in Bazzite but disabled, so enable it for this one install.
+  - type: script
+    snippets:
+      - "dnf5 -y install --enable-repo=terra fluent-icon-theme"
+
+  # Apps that need full system access are installed as RPMs inside the image.
+  - type: dnf
+    repos:
+      cleanup: true
+      files:
+        - vscode.repo
+      copr:
+        - jstaf/onedriver
+      keys:
+        - https://packages.microsoft.com/keys/microsoft.asc
+    install:
+      packages:
+        - code                  # Visual Studio Code
+        - onedriver             # OneDrive as a normal folder (files download on demand)
+        - langpacks-ar          # Arabic language pack and fonts
+        - hunspell-ar           # Arabic spell checking
+        - amiri-fonts           # Arabic Naskh font
+
+  - type: fonts
+    fonts:
+      google-fonts:
+        - Cairo
+        - Tajawal
+      nerd-fonts:
+        - JetBrainsMono
+
+  # Desktop apps from Flathub. They download on first boot (internet needed),
+  # system-wide for every user.
+  - type: default-flatpaks
+    configurations:
+      - scope: system
+        notify: true
+        install:
+          # Chrome comes from Flathub: the Flatpak downloads it from Google on the
+          # user's PC, because Google's terms don't allow shipping it inside the image.
+          - com.google.Chrome
+          - com.heroicgameslauncher.hgl      # Epic, GOG and Amazon games
+          - org.onlyoffice.desktopeditors    # Word / Excel / PowerPoint files
+          - com.usebottles.bottles           # Runs Windows .exe files
+          - io.github.unknownskl.greenlight  # Xbox Cloud Gaming
+          - com.discordapp.Discord
+          - io.missioncenter.MissionCenter   # Task Manager
+          - org.kde.okular                   # PDF reader
+          - org.kde.gwenview                 # Photos
+          - org.kde.kcalc                    # Calculator
+          - org.kde.haruna                   # Video player
+          - com.vysp3r.ProtonPlus            # Game compatibility tools
+          - com.github.Matoking.protontricks
+          - com.github.tchx84.Flatseal       # App permissions
+          - io.github.flattool.Warehouse     # Manage installed apps
+          - it.mijorus.gearlever             # AppImage installer
+
+  - type: systemd
+    system:
+      enabled:
+        - nasim-flatpak-config.service
+
+  # Nasim OS name, logo and icons. Runs after the icon theme is installed.
+  - type: script
+    scripts:
+      - nasim-branding.sh
+
+  # Must stay last: installed systems only accept updates signed with our key.
+  - type: signing

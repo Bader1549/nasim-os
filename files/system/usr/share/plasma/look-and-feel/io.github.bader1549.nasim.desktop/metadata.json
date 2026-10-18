@@ -1,0 +1,20 @@
+{
+    "KPackageStructure": "Plasma/LookAndFeel",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Name": "Nasim OS",
+                "Email": ""
+            }
+        ],
+        "Category": "",
+        "Description": "Nasim OS default desktop",
+        "Description[ar]": "سطح المكتب الافتراضي لنظام نسيم",
+        "Id": "io.github.bader1549.nasim.desktop",
+        "License": "GPL-2.0-or-later",
+        "Name": "Nasim",
+        "Name[ar]": "نسيم",
+        "Website": "https://github.com/Bader1549/nasim-os"
+    },
+    "X-Plasma-APIVersion": "2"
+}

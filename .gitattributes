@@ -1,0 +1,2 @@
+# Files end up inside a Linux image: always use LF line endings, even when edited on Windows.
+* text=auto eol=lf

@@ -1,0 +1,13 @@
+{
+    "KPlugin": {
+        "Authors": [
+            {
+                "Name": "Nasim OS"
+            }
+        ],
+        "Id": "Nasim",
+        "License": "CC-BY-SA-4.0",
+        "Name": "Nasim",
+        "Name[ar]": "نسيم"
+    }
+}

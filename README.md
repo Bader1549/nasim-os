@@ -1,43 +1,75 @@
-# BlueBuild Template &nbsp; [![bluebuild build badge](https://github.com/blue-build/template/actions/workflows/build.yml/badge.svg)](https://github.com/blue-build/template/actions/workflows/build.yml)
+# Nasim OS · نظام نسيم
 
-See the [BlueBuild docs](https://blue-build.org/how-to/setup/) for quick setup instructions for setting up your own repository based on this template.
+[![bluebuild build badge](https://github.com/Bader1549/nasim-os/actions/workflows/build.yml/badge.svg)](https://github.com/Bader1549/nasim-os/actions/workflows/build.yml)
 
-After setup, it is recommended you update this README to describe your custom image.
+نظام لينكس خفيف وشكله قريب من ويندوز، للبرمجة والألعاب والشغل المكتبي. مبني على [Bazzite](https://bazzite.gg).
 
-## Installation
+A light, Windows-like Linux for coding, gaming and office work. Built with [BlueBuild](https://blue-build.org) on top of [Bazzite](https://bazzite.gg). Nasim OS is a personal project and is not affiliated with Bazzite, Universal Blue or Microsoft.
 
-> [!WARNING]  
-> [This is an experimental feature](https://www.fedoraproject.org/wiki/Changes/OstreeNativeContainerStable), try at your own discretion.
+## What you get · وش فيه
 
-To rebase an existing atomic Fedora installation to the latest build:
+| | |
+|---|---|
+| Desktop | KDE Plasma with a Windows-11-style centred taskbar, Fluent icons, Hijri (Umm al-Qura) calendar in the clock |
+| Coding | Visual Studio Code, Podman, Distrobox, Homebrew |
+| Gaming | Steam, Lutris, Heroic (Epic / GOG / Amazon), Greenlight (Xbox Cloud Gaming), Proton tools |
+| Office | OnlyOffice (opens Word, Excel and PowerPoint files), Okular (PDF) |
+| Internet | Google Chrome, Discord, OneDrive as a normal folder (onedriver) |
+| Windows programs | Double-click a `.exe` to open it with Bottles |
+| Arabic | Arabic UI available, Arabic fonts (Noto, Amiri, Cairo, Tajawal, KACST), Alt+Shift switches English/Arabic keyboard |
 
-- First rebase to the unsigned image, to get the proper signing keys and policies installed:
+Some apps (Chrome, OnlyOffice, Heroic, Bottles, Discord and others) download automatically from Flathub on first boot, so the first start needs internet.
+
+## Images · النسخ
+
+| Image | For |
+|---|---|
+| `ghcr.io/bader1549/nasim-os` | AMD and Intel graphics (most PCs and laptops) |
+| `ghcr.io/bader1549/nasim-os-nvidia` | NVIDIA GTX 16xx, RTX 20 series and newer |
+
+Requirements (same as Bazzite): 64-bit x86 PC with UEFI, 8 GB RAM recommended, 50 GB free on an SSD. TPM is not needed.
+
+## Known limits · حدود معروفة
+
+- Games with kernel anti-cheat (Valorant, Fortnite and similar) do not run on Linux.
+- There is no Xbox app on Linux. Xbox Cloud Gaming runs through Greenlight or the browser, where Microsoft offers it in your region.
+- Not every Windows program works through Bottles.
+
+## Switch an existing Bazzite / Fedora Atomic install
+
+```bash
+sudo bootc switch ghcr.io/bader1549/nasim-os:latest && sudo systemctl reboot
+# after the reboot, switch to the signed image:
+sudo bootc switch --enforce-container-sigpolicy ghcr.io/bader1549/nasim-os:latest && sudo systemctl reboot
+```
+
+Use `nasim-os-nvidia` instead of `nasim-os` on NVIDIA PCs.
+
+Coming from Bazzite, your account still has Bazzite's startup apps. To stop Steam and the Bazzite Portal opening at login (optional):
+
+```bash
+rm -f ~/.config/autostart/steam.desktop ~/.config/autostart/bazzite-portal.desktop
+```
+
+## Secure Boot
+
+Nasim OS uses Bazzite's signed kernel, so with Secure Boot on, the Universal Blue key must be enrolled.
+
+- Coming from Bazzite or another Universal Blue image: it is normally enrolled already. If not, run `ujust enroll-secure-boot-key`.
+- Coming from Fedora Atomic: enroll it **before** switching:
+
+  ```bash
+  curl -LO https://github.com/ublue-os/bazzite/raw/main/secure_boot.der
+  sudo mokutil --timeout -1
+  sudo mokutil --import secure_boot.der
   ```
-  rpm-ostree rebase ostree-unverified-registry:ghcr.io/blue-build/template:latest
-  ```
-- Reboot to complete the rebase:
-  ```
-  systemctl reboot
-  ```
-- Then rebase to the signed image, like so:
-  ```
-  rpm-ostree rebase ostree-image-signed:docker://ghcr.io/blue-build/template:latest
-  ```
-- Reboot again to complete the installation
-  ```
-  systemctl reboot
-  ```
 
-The `latest` tag will automatically point to the latest build. That build will still always use the Fedora version specified in `recipe.yml`, so you won't get accidentally updated to the next major version.
-
-## ISO
-
-If build on Fedora Atomic, you can generate an offline ISO with the instructions available [here](https://blue-build.org/how-to/generate-iso/#_top). These ISOs cannot unfortunately be distributed on GitHub for free due to large sizes, so for public projects something else has to be used for hosting.
+  Reboot, choose "Enroll MOK" and type the password `universalblue`. The key screen uses an English (QWERTY) keyboard.
 
 ## Verification
 
-These images are signed with [Sigstore](https://www.sigstore.dev/)'s [cosign](https://github.com/sigstore/cosign). You can verify the signature by downloading the `cosign.pub` file from this repo and running the following command:
+Images are signed with [cosign](https://github.com/sigstore/cosign):
 
 ```bash
-cosign verify --key cosign.pub ghcr.io/blue-build/template
+cosign verify --key cosign.pub ghcr.io/bader1549/nasim-os
 ```

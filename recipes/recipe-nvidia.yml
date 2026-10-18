@@ -1,0 +1,13 @@
+---
+# yaml-language-server: $schema=https://schema.blue-build.org/recipe-v1.json
+# Nasim OS for NVIDIA graphics: GTX 16xx, RTX 20 series and newer (open driver).
+# Published as ghcr.io/bader1549/nasim-os-nvidia
+name: nasim-os-nvidia
+description: Nasim OS for NVIDIA GPUs (GTX 16xx / RTX 20 and newer). Based on Bazzite.
+
+base-image: ghcr.io/ublue-os/bazzite-nvidia-open
+# Same Fedora 44 pin as recipe.yml.
+image-version: stable-44
+
+modules:
+  - from-file: common.yml

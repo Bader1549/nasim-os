@@ -1,0 +1,14 @@
+[Default Applications]
+# Kept from Bazzite: open .flatpakref files in the Bazaar app store.
+application/vnd.flatpak.ref=io.github.kolunmi.Bazaar.desktop
+# Double-clicking a Windows program opens it with Bottles.
+application/vnd.microsoft.portable-executable=com.usebottles.bottles.desktop
+application/x-msdownload=com.usebottles.bottles.desktop
+application/x-ms-dos-executable=com.usebottles.bottles.desktop
+application/x-msi=com.usebottles.bottles.desktop
+application/x-ms-shortcut=com.usebottles.bottles.desktop
+# Google Chrome is the default browser.
+x-scheme-handler/http=com.google.Chrome.desktop
+x-scheme-handler/https=com.google.Chrome.desktop
+text/html=com.google.Chrome.desktop
+application/xhtml+xml=com.google.Chrome.desktop

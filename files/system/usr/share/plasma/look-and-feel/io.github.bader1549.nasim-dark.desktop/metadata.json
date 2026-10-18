@@ -1,0 +1,20 @@
+{
+    "KPackageStructure": "Plasma/LookAndFeel",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Name": "Nasim OS",
+                "Email": ""
+            }
+        ],
+        "Category": "",
+        "Description": "Nasim OS dark desktop",
+        "Description[ar]": "سطح المكتب الداكن لنظام نسيم",
+        "Id": "io.github.bader1549.nasim-dark.desktop",
+        "License": "GPL-2.0-or-later",
+        "Name": "Nasim Dark",
+        "Name[ar]": "نسيم الداكن",
+        "Website": "https://github.com/Bader1549/nasim-os"
+    },
+    "X-Plasma-APIVersion": "2"
+}

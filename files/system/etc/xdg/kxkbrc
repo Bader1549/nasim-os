@@ -1,0 +1,6 @@
+[Layout]
+Use=true
+LayoutList=us,ara
+VariantList=,
+Options=grp:alt_shift_toggle
+ResetOldOptions=true

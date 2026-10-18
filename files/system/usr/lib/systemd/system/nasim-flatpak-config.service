@@ -1,0 +1,18 @@
+[Unit]
+Description=Nasim OS: Flatpak language and permission defaults
+# Run before BlueBuild installs the default Flatpaks, so they come with Arabic translations.
+Before=system-flatpak-setup.service
+ConditionPathExists=/usr/bin/flatpak
+
+[Service]
+Type=oneshot
+# Download app translations for English and Arabic.
+ExecStart=/usr/bin/flatpak config --system --set languages "en;ar"
+# Let Bottles read the Downloads folder, so installers that need files next to them work.
+ExecStart=/usr/bin/flatpak override --system --filesystem=xdg-download:ro com.usebottles.bottles
+# Chrome: game controllers in the browser (Xbox Cloud Gaming), and installing web apps to the menu.
+ExecStart=/usr/bin/flatpak override --system --filesystem=/run/udev:ro --filesystem=~/.local/share/applications:create --filesystem=~/.local/share/icons:create com.google.Chrome
+RemainAfterExit=yes
+
+[Install]
+WantedBy=multi-user.target
