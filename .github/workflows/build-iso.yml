@@ -1,0 +1,69 @@
+name: build-iso
+# Makes an installer ISO from an image this repo already built.
+# Works while the ghcr.io packages are private: the job reads the image with
+# its own token and hands it to the ISO builder as a local file.
+on:
+  workflow_dispatch:
+    inputs:
+      image:
+        description: Which Nasim OS image
+        type: choice
+        default: nasim-os
+        options:
+          - nasim-os
+          - nasim-os-nvidia
+
+jobs:
+  build-iso:
+    name: Build ${{ inputs.image }} ISO
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: read
+    steps:
+      - name: Free disk space
+        uses: jlumbroso/free-disk-space@v2.0.0
+        with:
+          tool-cache: true
+
+      - name: Copy the image out of ghcr.io
+        env:
+          TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          command -v skopeo >/dev/null || { sudo apt-get update && sudo apt-get install -y skopeo; }
+          skopeo copy --src-creds "${{ github.actor }}:${TOKEN}" \
+            "docker://ghcr.io/bader1549/${{ inputs.image }}:latest" \
+            "oci-archive:${GITHUB_WORKSPACE}/${{ inputs.image }}.oci.tar"
+          ls -lh "${GITHUB_WORKSPACE}/${{ inputs.image }}.oci.tar"
+          df -h "${GITHUB_WORKSPACE}"
+
+      - name: Build ISO
+        id: build
+        uses: jasonn3/build-container-installer@v1.5.0
+        with:
+          arch: x86_64
+          image_repo: ghcr.io/bader1549
+          image_name: ${{ inputs.image }}
+          image_tag: latest
+          image_src: oci-archive:/github/workspace/${{ inputs.image }}.oci.tar
+          version: "44"
+          variant: Kinoite
+          image_signed: "true"
+          secure_boot_key_url: https://github.com/ublue-os/bazzite/raw/main/secure_boot.der
+          enrollment_password: universalblue
+          iso_name: build/${{ inputs.image }}.iso
+
+      - name: Show ISO size
+        run: ls -lh build/ && df -h "${GITHUB_WORKSPACE}"
+
+      - name: Upload ISO
+        uses: actions/upload-artifact@v7
+        with:
+          name: ${{ inputs.image }}-iso
+          path: |
+            build/${{ inputs.image }}.iso
+            build/${{ inputs.image }}.iso-CHECKSUM
+          if-no-files-found: error
+          retention-days: 2
+          compression-level: 0
