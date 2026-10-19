@@ -74,6 +74,7 @@ modules:
     system:
       enabled:
         - nasim-flatpak-config.service
+        - nasim-first-user.service
 
   # Nasim OS name, logo and icons. Runs after the icon theme is installed.
   - type: script

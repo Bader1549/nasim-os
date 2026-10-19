@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+# Nasim OS: an account is optional. If the installer created no user, make one
+# called "nasim" with no password and log it in automatically. A password can be
+# added later in System Settings > Users.
+set -euo pipefail
+
+if getent passwd | awk -F: '$3 >= 1000 && $3 < 60000 { found = 1 } END { exit !found }'; then
+  echo "nasim-first-user: a user already exists, nothing to do"
+  exit 0
+fi
+
+useradd --create-home --comment "Nasim" --groups wheel nasim
+passwd --delete nasim
+echo "nasim-first-user: created passwordless user nasim"
+
+mkdir -p /etc/plasmalogin.conf.d
+cat > /etc/plasmalogin.conf.d/50-nasim-autologin.conf <<'EOF'
+[Autologin]
+User=nasim
+Session=plasma
+Relogin=false
+EOF
+echo "nasim-first-user: automatic login enabled for nasim"
